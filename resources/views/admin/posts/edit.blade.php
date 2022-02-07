@@ -23,12 +23,34 @@
             <h3 class="card-title">Crear posts</h3>
         </div>
         <div class="card-body">
+
+            <div class="row">
+                @if ($post->photos->count())
+                    <div class="col-md-12">
+                        <label>Imagenes</label>
+                        <div class="row">
+                            @foreach ($post->photos as $photo)
+                                <div class="col-md-2">
+                                    <form action="{{ route('admin.photos.destroy', $photo) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger btn-sm position-absolute">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                        <img src="{{ url($photo->url) }}" alt="" class="img-fluid">
+                                    </form>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
             <form action="{{ route('admin.posts.update', $post) }}" method="POST">
                 @csrf
                 @method('PUT')
 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-7">
                         <div class="form-group">
                             <label>Titulo</label>
                             <input name="title" placeholder="Ingresa aqui el titulo de la publicacion"
@@ -51,8 +73,21 @@
                                 </span>
                             @enderror
                         </div>
+
+                        <div class="form-group">
+                            <label>Contenido embebido</label>
+                            <textarea name="iframe" rows="2" class="form-control @error('iframe') is-invalid @enderror"
+                                placeholder="Contenido embebido (iframe) de audio o video" required
+                                autocomplete="iframe">{{ old('iframe', $post->iframe) }}</textarea>
+                            @error('iframe')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <div class="form-group">
                             <label>Fecha de publicacion</label>
                             <div class="input-group date" data-provide="datepicker">
@@ -72,7 +107,8 @@
                         </div>
                         <div class="form-group">
                             <label>Categorias</label>
-                            <select name="category_id" class="form-control @error('category_id') is-invalid @enderror">
+                            <select name="category_id"
+                                class="form-control select2 @error('category_id') is-invalid @enderror">
                                 <option value="">Seleccione una categoria</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}"
@@ -151,17 +187,20 @@
 
     <script>
         CKEDITOR.replace('body');
+        CKEDITOR.config.height = 315;
         $('#datepicker').datepicker({
             format: 'mm/dd/yyyy',
             autoclose: true,
             startDate: '-3d'
         });
 
-        $('.select2').select2();
+        $('.select2').select2({
+            tags: true
+        });
 
         let myDropzone = new Dropzone('.dropzone', {
             url: '/admin/posts/{{ $post->url }}/photos',
-            paramName:'photo',
+            paramName: 'photo',
             acceptedFiles: 'image/*',
             maxFilesize: 2,
             headers: {
@@ -170,7 +209,7 @@
             dictDefaultMessage: "Arrastra las fotos aquí para subirlas"
         });
 
-        myDropzone.on('error', function(file, res){
+        myDropzone.on('error', function(file, res) {
             let msg = res.photo[0];
             $('.dz-error-message:last > span').text(msg);
         });

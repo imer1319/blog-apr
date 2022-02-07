@@ -40,6 +40,7 @@
                             <td>{{ $post->title }}</td>
                             <td>{{ $post->excerpt }}</td>
                             <td>
+                                <a href="{{ route('blog.show', $post) }}" class="btn btn-default btn-sm"><i class="fas fa-eye"></i></a>
                                 <a href="{{ route('admin.posts.edit', $post) }}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
                                 <a href="#" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a>
                             </td>

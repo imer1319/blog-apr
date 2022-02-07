@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
              'email' => 'imer@imer.com',
              'password' => bcrypt('123123'),
          ]);
-         \App\Models\Category::factory()->count(7)->create();
-         \App\Models\Post::factory()->count(30)->create();
-         \App\Models\Tag::factory()->count(10)->create();
+         \App\Models\Category::factory()->count(3)->create();
+         \App\Models\Post::factory()->count(5)->create();
+         \App\Models\Tag::factory()->count(4)->create();
     }
 }

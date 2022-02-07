@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class TagFactory extends Factory
 {
@@ -13,8 +14,10 @@ class TagFactory extends Factory
      */
     public function definition()
     {
+        $title = $this->faker->word();
         return [
-            'name' => $this->faker->word()
+            'name' => $title,
+            'url' => Str::slug($title)
         ];
     }
 }
