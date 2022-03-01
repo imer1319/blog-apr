@@ -42,7 +42,12 @@
                             <td>
                                 <a href="{{ route('blog.show', $post) }}" class="btn btn-default btn-sm"><i class="fas fa-eye"></i></a>
                                 <a href="{{ route('admin.posts.edit', $post) }}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i></a>
-                                <a href="#" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a>
+                                <form action="{{ route('admin.posts.destroy', $post) }}" method="POST" style="display: inline">
+                                    @method('DELETE') @csrf
+                                    <button
+                                    onclick="return confirm('¿Estas seguro de eliminar esta publicación?')"
+                                    class="btn btn-danger btn-sm"><i class="fa fa-times"></i></a>
+                                </form>
                             </td>
                         </tr>
                     @endforeach

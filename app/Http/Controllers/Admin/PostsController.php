@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Carbon\Carbon;
 use App\Models\Tag;
 use App\Models\Post;
 use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
@@ -14,33 +14,37 @@ class PostsController extends Controller
 {
     public function index()
     {
-        $posts = Post::all();
+        $posts = auth()->user()->posts;
+
         return view('admin.posts.index', compact('posts'));
     }
 
     public function create()
     {
         $tags = Tag::all();
+
         $categories = Category::all();
+
         return view('admin.posts.create', compact('categories', 'tags'));
     }
 
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'title' => 'required',
-        ]);
+        $this->validate($request, ['title' => 'required|min:3']);
 
-        $post = Post::create($request->only('title'));
-
+        $post = Post::create($request->all());
         return redirect()->route('admin.posts.edit', $post);
     }
 
     public function edit(Post $post)
     {
-        $tags = Tag::all();
-        $categories = Category::all();
-        return view('admin.posts.edit', compact('categories', 'tags', 'post'));
+        $this->authorize('view', $post);
+
+        return view('admin.posts.edit',[
+            'post' => $post,
+            'tags' =>Tag::all(),
+            'categories' =>Category::all()
+        ]);
     }
     public function update(Post $post, StorePostRequest $request)
     {
@@ -48,6 +52,14 @@ class PostsController extends Controller
 
         $post->syncTags($request->get('tags'));
 
-        return  redirect()->route('admin.posts.edit', $post)->with('flash', 'Tu publicacion fue creada');
+        return redirect()->route('admin.posts.edit', $post)->with('flash', 'La publicacion fue guardada');
+    }
+
+    public function destroy(Post $post)
+    {
+        $this->authorize('delete', $post);
+        $post->delete();
+
+        return redirect()->route('admin.posts.index')->with('flash', 'La publicacion fue eliminada');
     }
 }

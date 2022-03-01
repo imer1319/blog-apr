@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
+use function PHPUnit\Framework\isNull;
+
 class Post extends Model
 {
     use HasFactory;
@@ -14,9 +16,20 @@ class Post extends Model
     protected $dates = ['published_at'];
 
     protected $fillable = [
-        'title', 'body', 'iframe', 'excerpt', 'published_at', 'category_id'
+        'title', 'body', 'iframe', 'excerpt', 'published_at', 'category_id', 'user_id'
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($post) {
+
+            $post->tags()->detach();
+
+            $post->photos->each->delete();
+        });
+    }
 
     public function getRouteKeyName()
     {
@@ -38,17 +51,47 @@ class Post extends Model
         return $this->hasMany(Photo::class);
     }
 
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function scopePublished($query)
     {
         $query->whereNotNull('published_at')
+
             ->where('published_at', '<=', Carbon::now())
+
             ->latest('published_at');
     }
 
-    public function setTitleAttribute($title)
+    public function isPublished()
     {
-        $this->attributes['title'] = $title;
-        $this->attributes['url'] = Str::slug($title);
+        return !is_null($this->published_at) && $this->published_at < today();
+    }
+
+    public static function create(array $attributes = [])
+    {
+        $attributes['user_id'] = auth()->id();
+
+        $post = static::query()->create($attributes);
+
+        $post->generateUrl();
+
+        return $post;
+    }
+
+    public function generateUrl()
+    {
+        $url = Str::slug($this->title);
+
+        if ($this->where('url', $url)->exists()) {
+            $url = "{$url}-{$this->id}";
+        }
+
+        $this->url = $url;
+
+        $this->save();
     }
 
     public function setPublishedAtAttribute($published_at)
@@ -59,15 +102,28 @@ class Post extends Model
     public function setCategoryIdAttribute($category)
     {
         $this->attributes['category_id'] = Category::find($category)
-                                    ? $category
-                                    : Category::create(['name' => $category])->id;
+            ? $category
+            : Category::create(['name' => $category])->id;
     }
 
     public function syncTags($tags)
     {
-        $tagIds = collect($tags)->map(function($tag){
+        $tagIds = collect($tags)->map(function ($tag) {
             return Tag::find($tag) ? $tag : Tag::create(['name' => $tag])->id;
         });
         return $this->tags()->sync($tagIds);
+    }
+
+    public function viewType($home = '')
+    {
+        if ($this->photos->count() === 1) :
+            return 'posts.photo';
+        elseif ($this->photos->count() > 1) :
+            return $home === 'home' ? 'posts.carousel-preview' : 'posts.carousel';
+        elseif ($this->iframe) :
+            return 'posts.iframe';
+        else:
+            return 'posts.text';
+        endif;
     }
 }

@@ -15,7 +15,11 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ConfirmPasswordController;
 
-Route::get('/', [PagesController::class,'home']);
+Route::get('/', [PagesController::class,'home'])->name('pages.home');
+Route::get('nosotros', [PagesController::class,'about'])->name('pages.about');
+Route::get('archivo', [PagesController::class,'archive'])->name('pages.archive');
+Route::get('contacto', [PagesController::class,'contact'])->name('pages.contact');
+
 Route::get('blog/{post}', [PostController::class,'show'])->name('blog.show');
 Route::get('categorias/{category}', [CategoriesController::class,'show'])->name('categories.show');
 Route::get('tags/{tag}', [TagsController::class,'show'])->name('tags.show');
@@ -29,6 +33,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
     Route::post('posts', [PostsController::class, 'store'])->name('admin.posts.store');
     Route::get('posts/{post}', [PostsController::class, 'edit'])->name('admin.posts.edit');
     Route::put('posts/{post}', [PostsController::class, 'update'])->name('admin.posts.update');
+    Route::delete('posts/{post}',[PostsController::class, 'destroy'])->name('admin.posts.destroy');
 
     Route::post('posts/{post}/photos', [PhotosController::class, 'store'])->name('admin.posts.photos.store');
     Route::delete('photos/{photo}', [PhotosController::class, 'destroy'])->name('admin.photos.destroy');

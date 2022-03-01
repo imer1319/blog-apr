@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <form action="{{ route('admin.posts.store') }}" method="POST">
+            <form action="{{ route('admin.posts.store', '#create') }}" method="POST">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Agrega el titulo de tu publicacion</h5>
@@ -12,7 +12,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <input name="title" placeholder="Ingresa aqui el titulo de la publicacion"
+                        <input name="title" placeholder="Ingresa aqui el titulo de la publicacion" id="post-title"
                             class="form-control @error('title') is-invalid @enderror" value="{{ old('title') }}"
                             required autocomplete="title" autofocus>
                         @error('title')
@@ -30,3 +30,22 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        if (window.location.hash === "#create") {
+            $('#modalCreate').modal('show');
+        }
+
+        $('#modalCreate').on('hide.bs.modal', function() {
+            window.location.hash = "#";
+            $('#post-title').val('');
+            $('#post-title').removeClass('is-invalid');
+        });
+
+        $('#modalCreate').on('shown.bs.modal', function() {
+            $('#post-title').focus();
+            window.location.hash = "#create";
+        });
+    </script>
+@endpush

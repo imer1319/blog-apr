@@ -20,7 +20,8 @@ class PostFactory extends Factory
             'excerpt' => $this->faker->sentence(),
             'body' => $this->faker->text(),
             'published_at' => now(),
-            'category_id' => rand(1,3)
+            'category_id' => rand(1,3),
+            'user_id' => 1
         ];
     }
 }
