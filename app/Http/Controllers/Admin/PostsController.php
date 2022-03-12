@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Tag;
 use App\Models\Post;
 use App\Models\Category;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
@@ -30,6 +29,8 @@ class PostsController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', new Post);
+
         $this->validate($request, ['title' => 'required|min:3']);
 
         $post = Post::create($request->all());
@@ -48,6 +49,8 @@ class PostsController extends Controller
     }
     public function update(Post $post, StorePostRequest $request)
     {
+        $this->authorize('update', $post);
+
         $post->update($request->all());
 
         $post->syncTags($request->get('tags'));
@@ -58,6 +61,7 @@ class PostsController extends Controller
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
+
         $post->delete();
 
         return redirect()->route('admin.posts.index')->with('flash', 'La publicacion fue eliminada');
