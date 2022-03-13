@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\PostsController;
 use App\Http\Controllers\Admin\PhotosController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\UsersRolesController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -31,6 +32,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 
     Route::resource('posts', PostsController::class, ['as' => 'admin'])->except('show');
     Route::resource('users', UsersController::class, ['as' => 'admin']);
+
+    Route::put('users/{user}/roles', [UsersRolesController::class,'update'])->name('admin.users.roles.update');
 
     Route::post('posts/{post}/photos', [PhotosController::class, 'store'])->name('admin.posts.photos.store');
     Route::delete('photos/{photo}', [PhotosController::class, 'destroy'])->name('admin.photos.destroy');
