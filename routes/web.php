@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\PostsController;
 use App\Http\Controllers\Admin\PhotosController;
+use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -28,12 +29,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
-    Route::get('posts', [PostsController::class, 'index'])->name('admin.posts.index');
-    Route::get('posts/create', [PostsController::class, 'create'])->name('admin.posts.create');
-    Route::post('posts', [PostsController::class, 'store'])->name('admin.posts.store');
-    Route::get('posts/{post}', [PostsController::class, 'edit'])->name('admin.posts.edit');
-    Route::put('posts/{post}', [PostsController::class, 'update'])->name('admin.posts.update');
-    Route::delete('posts/{post}',[PostsController::class, 'destroy'])->name('admin.posts.destroy');
+    Route::resource('posts', PostsController::class, ['as' => 'admin'])->except('show');
+    Route::resource('users', UsersController::class, ['as' => 'admin']);
 
     Route::post('posts/{post}/photos', [PhotosController::class, 'store'])->name('admin.posts.photos.store');
     Route::delete('photos/{photo}', [PhotosController::class, 'destroy'])->name('admin.photos.destroy');

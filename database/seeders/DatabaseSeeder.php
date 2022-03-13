@@ -8,6 +8,7 @@ use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +21,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Storage::disk('public')->deleteDirectory('posts');
+
+        $viewPostsPermission = Permission::create(['name' => 'View posts']);
+        $createPostsPermission = Permission::create(['name' => 'Create posts']);
+        $updatePostsPermission = Permission::create(['name' => 'Update posts']);
+        $deletePostsPermission = Permission::create(['name' => 'Delete posts']);
 
         $roleAdmin = Role::create(['name' => 'Admin']);
         $roleWriter = Role::create(['name' => 'Writer']);

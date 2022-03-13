@@ -159,7 +159,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button"
                         data-toggle="dropdown" aria-expanded="false">
-                        {{ auth()->user()->name }}
+                        {{ auth()->user()->name }} - {{ auth()->user()->roles->first()->name }}
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                         <li><a class="dropdown-item" href="#">Action</a></li>
