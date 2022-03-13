@@ -33,14 +33,14 @@ class DatabaseSeeder extends Seeder
         $admin = User::factory()->create([
             'name' => 'admin',
             'email' => 'admin@admin.com',
-            'password' => bcrypt('123123'),
+            'password' => '123123',
         ]);
         $admin->assignRole($roleAdmin);
 
         $writer = User::factory()->create([
             'name' => 'writer',
             'email' => 'writer@writer.com',
-            'password' => bcrypt('123123'),
+            'password' => '123123',
         ]);
         $writer->assignRole($roleWriter);
 

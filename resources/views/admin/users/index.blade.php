@@ -20,8 +20,8 @@
     <div class="card">
         <div class="d-flex justify-content-between align-items-center p-3">
             <h3 class="card-title">Todos los usuarios</h3>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#modalCreate"><i class="fa fa-plus"></i>
-                Crear nuevo</button>
+            <a href="{{ route('admin.users.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i>
+                Crear nuevo</a>
         </div>
         <div class="card-body">
             <table id="users-table" class="table table-bordered table-striped">

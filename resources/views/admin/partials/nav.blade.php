@@ -1,13 +1,13 @@
 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
     <li class="nav-header">NAVEGACION</li>
-    <li class="nav-item">
+    <li class="nav-item {{ setActiveRoute('dashboard') }}">
         <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <i class="nav-icon fas fa-home"></i>
             <p>Inicio</p>
         </a>
     </li>
-    <li class="nav-item">
-        <a href="#" class="nav-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
+    <li class="nav-item {{ menuOpen(['admin.posts.index','admin.posts.create']) }}">
+        <a href="#" class="nav-link {{ setActiveRoute('admin.posts.index') }}">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
                 Blog
@@ -17,7 +17,7 @@
         <ul class="nav nav-treeview">
             <li class="nav-item">
                 <a href="{{ route('admin.posts.index') }}"
-                    class="nav-link {{ request()->routeIs('admin.posts.index') ? 'active' : '' }}">
+                    class="nav-link {{ setActiveRoute('admin.posts.index') }}">
                     <i class="far fa-eye nav-icon"></i>
                     <p>Ver todos los post</p>
                 </a>
@@ -37,13 +37,27 @@
             </li>
         </ul>
     </li>
-    <li class="nav-item">
-        <a href="#" class="nav-link">
-            <i class="nav-icon fas fa-th"></i>
+    <li class="nav-item {{ menuOpen(['admin.users.index','admin.users.create']) }}">
+        <a href="#" class="nav-link {{ setActiveRoute(['admin.users.index','admin.users.create']) }}">
+            <i class="nav-icon fas fa-users"></i>
             <p>
-                Simple Link
-                <span class="right badge badge-danger">New</span>
+                Usuarios
+                <i class="right fas fa-angle-left"></i>
             </p>
         </a>
+        <ul class="nav nav-treeview">
+            <li class="nav-item {{ setActiveRoute('admin.users.index') }}">
+                <a href="{{ route('admin.users.index') }}"
+                    class="nav-link {{ setActiveRoute('admin.users.index') }}">
+                    <i class="far fa-eye nav-icon"></i>
+                    <p>Ver todos los usuarios</p>
+                </a>
+            </li>
+            <li class="nav-item {{ setActiveRoute('admin.users.create') }}">
+                <a href="{{ route('admin.users.create') }}" class="nav-link"><i class="fas fa-pencil-alt nav-icon"></i>
+                    <p>Crear un usuario</p>
+                </a>
+            </li>
+        </ul>
     </li>
 </ul>
