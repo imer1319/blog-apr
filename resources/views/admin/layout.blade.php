@@ -162,7 +162,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         {{ auth()->user()->name }}
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li>
+                            <strong class="text-left dropdown-header">
+                                Rol: {{ auth()->user()->getRoleDisplayNames() }}
+                            </strong>
+                        </li>
                         <li><a class="dropdown-item" href="#">Another action</a></li>
                         <li>
                             <hr class="dropdown-divider">
@@ -197,7 +201,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">{{ auth()->user()->name }}</a>
+                        <a href="#" class="d-block">{{ auth()->user()->name }} -
+                            {{ auth()->user()->getRoleDisplayNames() }}</a>
                     </div>
                 </div>
 

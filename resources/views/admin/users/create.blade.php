@@ -8,13 +8,7 @@
                     <h3 class="card-title">Datos personales</h3>
                 </div>
                 <div class="card-body">
-                    @if ($errors->any())
-                        <ul class="list-group">
-                            @foreach ($errors->all() as $error)
-                                <li class="list-group-item text-danger">{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    @endif
+                    @include('partials.error-messages')
                     <form method="POST" action="{{ route('admin.users.store') }}">
                         @csrf
                         <div class="form-group">
@@ -33,7 +27,7 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Permisos</label>
-                                @include('admin.permissions.checkboxes')
+                                @include('admin.permissions.checkboxes', ['model' => $user])
                             </div>
                         </div>
                         <small class="text-muted">La contraseña sera generada y enviada vía email</small>

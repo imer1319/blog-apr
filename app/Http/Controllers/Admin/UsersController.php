@@ -20,7 +20,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::allowed()->get();
 
         return view('admin.users.index', compact('users'));
     }
@@ -33,6 +33,7 @@ class UsersController extends Controller
     public function create()
     {
         $user = new User();
+        $this->authorize('create', $user);
         $roles = Role::with('permissions')->get();
         $permissions = Permission::pluck('name', 'id');
         return view('admin.users.create', compact('user', 'roles', 'permissions'));
@@ -46,6 +47,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', new User);
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
@@ -73,6 +75,7 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
+        $this->authorize('view', $user);
         return view('admin.users.show', compact('user'));
     }
 
@@ -84,6 +87,8 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
+        $this->authorize('update', $user);
+
         $roles = Role::with('permissions')->get();
         $permissions = Permission::pluck('name', 'id');
         return view('admin.users.edit', compact('user', 'roles', 'permissions'));
@@ -100,7 +105,7 @@ class UsersController extends Controller
     {
         $user->update($request->validated());
 
-        return back()->withFlash('usuario actualizado');
+        return redirect()->route('admin.users.edit', $user)->withFlash('usuario actualizado');
     }
 
     /**
@@ -109,8 +114,12 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $this->authorize('delete', $user);
+
+        $user->delete();
+
+        return redirect()->route('admin.users.index')->withFlash('El usuario ha sido eliminado');
     }
 }

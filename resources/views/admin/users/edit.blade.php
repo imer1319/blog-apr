@@ -8,13 +8,7 @@
                     <h3 class="card-title">Datos personales</h3>
                 </div>
                 <div class="card-body">
-                    @if ($errors->any())
-                        <ul class="list-group">
-                            @foreach ($errors->all() as $error)
-                                <li class="list-group-item text-danger">{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    @endif
+                    @include('partials.error-messages')
                     <form method="POST" action="{{ route('admin.users.update', $user) }}">
                         @method('PUT') @csrf
 
@@ -52,13 +46,25 @@
                     <h3 class="card-title">Roles</h3>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.users.roles.update', $user) }}" method="POST">
-                        @csrf @method('put')
+                    @role('Admin')
+                        <form action="{{ route('admin.users.roles.update', $user) }}" method="POST">
+                            @csrf @method('put')
 
-                        @include('admin.roles.checkboxes')
+                            @include('admin.roles.checkboxes')
 
-                        <button class="btn btn-primary btn-block">Actualizar roles</button>
-                    </form>
+                            <button class="btn btn-primary btn-block">Actualizar roles</button>
+                        </form>
+                    @else
+                        <ul class="list-group">
+                            @forelse ($user->roles as $role)
+                                <li class="list-group-item">{{ $role->name }}</li>
+                            @empty
+                                <li class="list-group-item">
+                                    <span class="text-muted">No tienes roles para mostrar</span>
+                                </li>
+                            @endforelse
+                        </ul>
+                    @endrole
                 </div>
             </div>
             <div class="card card-primary card-outline">
@@ -66,13 +72,23 @@
                     <h3 class="card-title">Permisos</h3>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.users.permissions.update', $user) }}" method="POST">
-                        @csrf @method('put')
+                    @role('Admin')
+                        <form action="{{ route('admin.users.permissions.update', $user) }}" method="POST">
+                            @csrf @method('put')
 
-                        @include('admin.permissions.checkboxes')
+                            @include('admin.permissions.checkboxes', ['model' => $user])
 
-                        <button class="btn btn-primary btn-block">Actualizar permisos</button>
-                    </form>
+                            <button class="btn btn-primary btn-block">Actualizar permisos</button>
+                        </form>
+                    @else
+                        <ul class="list-group">
+                            @forelse ($user->permissions as $permission)
+                                <li class="list-group-item">{{ $permission->name }}</li>
+                            @empty
+                                <span class="text-muted">No tienes permisos para mostrar</span>
+                            @endforelse
+                        </ul>
+                    @endrole
                 </div>
             </div>
         </div>

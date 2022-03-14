@@ -22,7 +22,9 @@ class CreatePostsTable extends Migration
             $table->mediumText('excerpt')->nullable();
             $table->timestamp('published_at')->nullable();
             $table->bigInteger('category_id')->nullable();
-            $table->bigInteger('user_id');
+            $table->unsignedBigInteger('user_id');
+
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }
