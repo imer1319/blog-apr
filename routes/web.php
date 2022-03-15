@@ -7,6 +7,7 @@ use App\Http\Controllers\PagesController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\PostsController;
 use App\Http\Controllers\Admin\PhotosController;
 use App\Http\Controllers\Admin\RolesController;
@@ -35,6 +36,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::resource('posts', PostsController::class, ['as' => 'admin'])->except('show');
     Route::resource('users', UsersController::class, ['as' => 'admin']);
     Route::resource('roles', RolesController::class, ['as' => 'admin'])->except('show');
+    Route::resource('permissions', PermissionsController::class, ['as' => 'admin'])->only(['index','edit','update']);
 
     Route::middleware('role:Admin')
         ->put('users/{user}/roles', [UsersRolesController::class, 'update'])

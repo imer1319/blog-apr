@@ -47,7 +47,7 @@
                             <hr>
                         @endunless
                     @empty
-                        <small class="text-muted">No tiene permisos adicionales</small>
+                        <small class="text-muted">No tiene publicaciones</small>
                     @endforelse
                 </div>
             </div>

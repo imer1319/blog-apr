@@ -13,7 +13,7 @@
 
                         @include('admin.roles.form')
 
-                        <button class="btn btn-primary btn-block">Crear usuario</button>
+                        <button class="btn btn-primary btn-block">Crear rol</button>
                     </form>
                 </div>
             </div>

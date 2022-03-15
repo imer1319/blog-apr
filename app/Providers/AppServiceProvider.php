@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        DB::statement("SET lc_time_names = 'es_ES'");
+
         Paginator::useBootstrap();
     }
 }
